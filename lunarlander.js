@@ -46,7 +46,7 @@ const acceleration = 0.1;
 let angle = 0; // Angle of rotation for UFO
 let gameIsRunning = true;
 
-    //start
+    //start 
     function startScreen(){
         background(0, 0, 255);
         noStroke();
