@@ -25,17 +25,9 @@ function ufo(x, y){
     fill(255, 0, 0);
     rect(0 -17, 0, 36, 70);
     fill(255, 255, 255, 160);
-    ellipse(0, 20, 25);
+    ellipse(0, 40, 25);
     fill(0, 255, 0); 
-    ellipse(0, 25, 15);
-
-    //glass dome
-fill(255, 255, 255, 160);
-beginShape(); 
-vertex(-20, 0);
-bezierVertex(-20, 5, 20, 5, 20, 0);
-bezierVertex(20, -40, -20, -40, -20, 0);
-endShape();
+    ellipse(0, 45, 15);
 pop(); 
 }
 
@@ -73,9 +65,12 @@ let gameIsRunning = true;
         //ground
         fill (255,255,102);
         rect(0, 420, 600, 200); 
-        //crate
+        //crates
         fill(255,205,100);
         ellipse(50, 430, 60, 20); 
+        ellipse(170, 430, 80, 20); 
+        ellipse(300, 430, 50, 20); 
+        ellipse(420, 430, 110, 20); 
 
         push(); // Spara nuvarande transformationsmatris
         translate(ufoX, ufoY);
@@ -84,7 +79,6 @@ let gameIsRunning = true;
         pop(); // Återställ transformationsmatrisen för att undvika att påverka andra ritningar
        
       
-  
         if (gameIsRunning === true){ 
 
             
@@ -97,7 +91,7 @@ let gameIsRunning = true;
                 } 
                   //Tilt
                 if (keyCode === RIGHT_ARROW) {
-                    angle += 0.04; 
+                    angle += 0.04;  
                     if (angle > PI / 4) {
                         angle = PI / 4;
                     }
@@ -110,11 +104,14 @@ let gameIsRunning = true;
             }
             } 
          
-            if(ufoY > 370){
+            if(ufoY > 360 || ufoY < -20){
                 gameIsRunning = false; 
                 console.log("Game over");
             }
           } 
+          if(ufoX > 60 || ufoX < 400 && ufoY > 360){
+            console.log("100p");
+        }
     }
     function overScreen(){
         background(200, 71, 90);
@@ -144,7 +141,7 @@ let gameIsRunning = true;
         if (state === "start") {
             state = "game";
         } else if (state === "game") {
-            state = "result";
+            state = "result"; 
         } else if (state === "result") {
             state = "game";
             // Reset game variables if needed
