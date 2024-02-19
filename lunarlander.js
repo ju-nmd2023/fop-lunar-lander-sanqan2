@@ -66,7 +66,7 @@ let gameIsRunning = true;
         noStroke();
           //
           fill (80,250,80);
-          ellipse(100, 80, 60); 
+          ellipse(110, 110, 60); 
         //stars
         for (let star of stars) {
           fill(255, 255, 255, Math.abs(Math.sin(star.alpha)) * 255);
@@ -140,15 +140,13 @@ let gameIsRunning = true;
             if (angle > PI / 4){
                 ufoX = ufoX + superd; // Öka x-värdet med hastigheten
                 ufoY = ufoY + superd; // Öka y-värdet med hastigheten
-            }
+            } 
             textSize(20);
                 text("Speed: " + velocity.toFixed(2), 10, 30);
             if(ufoY > 360 || ufoY < -190){
                 gameIsRunning = false; 
                 console.log("Game over");
                 fill(255);
-                textSize(20);
-                text("Final velocity: " + velocity.toFixed(2), 10, 30); // Visa hastigheten i övre vänstra hörnet
             }
           } 
         if (velocity > 2 && ufoY > 360){
@@ -158,7 +156,7 @@ let gameIsRunning = true;
     function overScreen(){
         background(200, 71, 90);
         text("Result", 250, 200); 
-        for (let star of stars) {
+        for (let star of stars) { 
             fill(255, 255, 255, Math.abs(Math.sin(star.alpha)) * 255);
             ellipse(star.x, star.y, 3);
             // Flashing
