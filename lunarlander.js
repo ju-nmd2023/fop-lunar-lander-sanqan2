@@ -43,8 +43,8 @@ function drawSmoke(x, y) {
 
 let ufoY = 100;
 let ufoX = 200;
-let velocity = 1;
-const acceleration = 0.1;
+let velocity = 0.04;
+const acceleration = 0.04;
 let angle = 0;
 let superd = 3;
 let gameIsRunning = true;
@@ -119,7 +119,7 @@ function gameScreen() {
       if (keyCode === DOWN_ARROW) {
         velocity = velocity - 0.01;
       }
-      //Tilt
+      
       if (angle !== 0 && keyIsPressed && keyCode === DOWN_ARROW) {
         // Calculate the changes in x and y based on the angle
         let direction = angle > 0 ? 1 : -1; // Determine the direction of rotation
@@ -160,26 +160,48 @@ function gameScreen() {
       ufoY = ufoY + superd; // Öka y-värdet med hastigheten
     }
     textSize(20);
-    text("Speed: " + velocity.toFixed(2), 10, 30);
+    text("Speed: " + velocity.toFixed(2), 50, 30);
     if (ufoY > 360 || ufoY < -190) {
       gameIsRunning = false;
       console.log("Game over");
       fill(255);
     }
   }
-  if (velocity > 2 && ufoY > 360) {
-    console.log("crash");
-  }
 }
 
 function overScreen() {
   background(230, 21, 20);
-  text("Result", 250, 200);
+ 
   for (let star of stars) {
     fill(255, 255, 255, Math.abs(Math.sin(star.alpha)) * 255);
     ellipse(star.x, star.y, 3);
     // Flashing
     star.alpha = star.alpha + 0.02;
+  }
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("Result", width/2, 200);
+  if (velocity > 3) {
+    text("Crash", width/2, height/2);
+  } else {
+    text("Good job", width/2, height/2);
+  }
+//Points
+  if(ufoY > 360 && ufoX > 20 && ufoX < 80 && velocity < 3){
+    text("100p", width/2, 90);
+  }
+  else if(ufoY > 360 && ufoX > 130 && ufoX < 210 && velocity < 3){
+    text("80p", width/2, 90);
+  }
+  else if(ufoY > 360 && ufoX > 270 && ufoX < 325 && velocity < 3){
+    text("120p", width/2, 90);
+  }
+  else if(ufoY > 360 && ufoX > 362 && ufoX < 475 && velocity < 3){
+    text("60p", width/2, 90);
+  }
+  else{
+    text("0p", width/2, 90);
   }
 }
 
