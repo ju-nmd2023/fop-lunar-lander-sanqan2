@@ -1,11 +1,8 @@
 let stars = [];
 function setup() {
   createCanvas(590, 500);
-  background(255);
-
   textSize(22); // Set text size
-  textFont("Arial"); // Set text font
-
+ 
   // Fill with stars
   for (let i = 0; i < 860; i++) {
     const star = {
@@ -16,7 +13,7 @@ function setup() {
     stars.push(star);
   }
 }
-//ufo
+//Rocket
 function ufo(x, y) {
   push();
   translate(x, y);
@@ -34,19 +31,28 @@ function ufo(x, y) {
   triangle(-18, 0, 0, -30, 18, 0);
   pop();
 }
+//comet
+function comet(x, y){
+    fill(100);
+  ellipse(cometX, 100, 50, 20);
+  ellipse(cometX, 100, 50, 20);
+}
+
 // Fire/Smoke
 let smokeY = 90;
 function drawSmoke(x, y) {
   fill(230, 167, 20);
   ellipse(x, y, 30, 50);
 }
-
+let cometX = 0;
+let cometY = 200;
+let cometspeed = 2;
 let ufoY = 100;
 let ufoX = 200;
 let velocity = 0.04;
 const acceleration = 0.04;
 let angle = 0;
-let superd = 3;
+let sideway = 3;
 let gameIsRunning = true;
 
 //start
@@ -60,19 +66,25 @@ function startScreen() {
     star.alpha = star.alpha + 0.02;
   }
   fill(0, 0, 0);
-  text("Lunar Lander", 220, 180);
-  text("Use the arrows to steer the rocket", 120, 230);
-  text("Do not crash", 230, 260);
-  text("Click to start...", 230, 320);
+  textAlign(CENTER);
+  textStyle(BOLD);
+  textSize(30);
+  textFont("Courier New");
+  text("Lunar Lander", width / 2, 180);
+  textSize(22);
+  text("Use the arrows to steer the rocket", width / 2, 230);
+  text("Land on the dark spots to", width / 2, 290);
+  text("get more or less points", width / 2, 310);
+  text("Do not crash", width / 2, 340);
+  text("Click to start...", width / 2, 360);
 }
 
 //game
 function gameScreen() {
   background(30, 11, 150);
   noStroke();
-  //
-  fill(80, 250, 80);
-  ellipse(110, 110, 60);
+ 
+ 
   //stars
   for (let star of stars) {
     fill(255, 255, 255, Math.abs(Math.sin(star.alpha)) * 255);
@@ -80,16 +92,13 @@ function gameScreen() {
     // Flashing
     star.alpha = star.alpha + 0.02;
   }
-
-  fill(100);
-  ellipse(340, 100, 30, 40);
-  fill(150);
-  rect(335, 90, 10, 5);
-  fill(255, 255, 0);
-  rect(330, 115, 20, 5);
-  fill(150);
-  rect(328, 120, 24, 3);
-
+  
+  
+  fill(120, 120, 120);
+  ellipse(110, 110, 60);
+  fill(120, 120, 120);
+  ellipse(400, 210, 60);
+  
   //ground
   fill(255, 255, 102);
   rect(0, 420, 600, 200);
@@ -100,10 +109,10 @@ function gameScreen() {
   ellipse(300, 430, 50, 20);
   ellipse(420, 430, 110, 20);
 
-  push(); // Spara nuvarande transformationsmatris
+  push();
   translate(ufoX, ufoY);
-  rotate(angle); // Använd vinkeln för rotation
-  ufo(0, 0); // Ritar UFO relativt till den övre vänstra hörnet av UFO
+  rotate(angle);
+  ufo(0, 0);
   pop();
 
   if (gameIsRunning === true) {
@@ -114,17 +123,22 @@ function gameScreen() {
     } else {
       smokeY = 40;
     }
+    //comet
+    comet(cometX, cometY);
+    cometX -= cometspeed;
+    if (cometX < 0) { // Om kometen åker utanför högerkanten av canvas
+      cometX = width; // Återställ kometens position till början av canvas
+    }
     //Up
     if (keyIsPressed) {
       if (keyCode === DOWN_ARROW) {
         velocity = velocity - 0.01;
       }
-      
       if (angle !== 0 && keyIsPressed && keyCode === DOWN_ARROW) {
         // Calculate the changes in x and y based on the angle
-        let direction = angle > 0 ? 1 : -1; // Determine the direction of rotation
-        let deltaX = superd * direction * cos(abs(angle));
-        let deltaY = superd * direction * sin(abs(angle));
+        let direction = angle > 0 ? 1 : -1; 
+        let deltaX = sideway * direction * cos(abs(angle));
+        let deltaY = sideway * direction * sin(abs(angle));
         ufoX += deltaX;
         ufoY += deltaY;
       } else {
@@ -134,7 +148,7 @@ function gameScreen() {
           smokeY = 40;
         }
       }
-
+      
       // In keyPressed() function
       if (keyIsPressed) {
         if (keyCode === DOWN_ARROW) {
@@ -156,11 +170,11 @@ function gameScreen() {
     }
 
     if (angle > PI / 4) {
-      ufoX = ufoX + superd; // Öka x-värdet med hastigheten
-      ufoY = ufoY + superd; // Öka y-värdet med hastigheten
+      ufoX = ufoX + sideway; // Öka x-värdet med hastigheten
+      ufoY = ufoY + sideway; // Öka y-värdet med hastigheten
     }
     textSize(20);
-    text("Speed: " + velocity.toFixed(2), 50, 30);
+    text("Speed: " + velocity.toFixed(2), 100, 30);
     if (ufoY > 360 || ufoY < -190) {
       gameIsRunning = false;
       console.log("Game over");
@@ -170,8 +184,8 @@ function gameScreen() {
 }
 
 function overScreen() {
-  background(230, 21, 20);
- 
+  background(20, 21, 200);
+
   for (let star of stars) {
     fill(255, 255, 255, Math.abs(Math.sin(star.alpha)) * 255);
     ellipse(star.x, star.y, 3);
@@ -179,33 +193,30 @@ function overScreen() {
     star.alpha = star.alpha + 0.02;
   }
   fill(255);
-  textSize(32);
+  textSize(32); 
   textAlign(CENTER, CENTER);
-  text("Result", width/2, 200);
+  text("Result", width / 2, 200);
   if (velocity > 3) {
-    text("Crash", width/2, height/2);
+    text("Crash", width / 2, height / 2);
   } else {
-    text("Good job", width/2, height/2);
+    text("Good job", width / 2, height / 2);
   }
-//Points
-  if(ufoY > 360 && ufoX > 20 && ufoX < 80 && velocity < 3){
-    text("100p", width/2, 90);
+  //Points
+  if (ufoY > 360 && ufoX > 20 && ufoX < 80 && velocity < 3) {
+    text("100p", width / 2, 90);
+  } else if (ufoY > 360 && ufoX > 130 && ufoX < 210 && velocity < 3) {
+    text("80p", width / 2, 90);
+  } else if (ufoY > 360 && ufoX > 270 && ufoX < 325 && velocity < 3) {
+    text("120p", width / 2, 90);
+  } else if (ufoY > 360 && ufoX > 362 && ufoX < 475 && velocity < 3) {
+    text("60p", width / 2, 90);
+  } else {
+    text("40p", width / 2, 90);
   }
-  else if(ufoY > 360 && ufoX > 130 && ufoX < 210 && velocity < 3){
-    text("80p", width/2, 90);
-  }
-  else if(ufoY > 360 && ufoX > 270 && ufoX < 325 && velocity < 3){
-    text("120p", width/2, 90);
-  }
-  else if(ufoY > 360 && ufoX > 362 && ufoX < 475 && velocity < 3){
-    text("60p", width/2, 90);
-  }
-  else{
-    text("0p", width/2, 90);
-  }
+
 }
 
-let state = "start";
+let state = "start"; 
 
 function draw() {
   if (state === "start") {
