@@ -36,6 +36,9 @@ function meteor(x, y){
     fill(100);
   ellipse(meteorX, 100, 40, 20);
   ellipse(meteorX, 120, 60, 50);
+  ellipse(meteorX, 105, 80, 50);
+  fill(0, 0, 0);
+  ellipse(meteorX, 105, 10, 10);
 }
 
 // Fire/Smoke
@@ -46,7 +49,7 @@ function drawSmoke(x, y) {
 }
 let  meteorX = 0;
 let  meteorY = 200;
-let  meteorSpeed = 2;
+let  meteorSpeed = 1.2;
 let ufoY = 100;
 let ufoX = 200;
 let velocity = 0.04;
