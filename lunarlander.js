@@ -33,12 +33,8 @@ function ufo(x, y) {
 }
 //meteor
 function meteor(x, y){
-    fill(100);
-  ellipse(meteorX, 100, 40, 20);
-  ellipse(meteorX, 120, 60, 50);
-  ellipse(meteorX, 105, 80, 50);
-  fill(0, 0, 0);
-  ellipse(meteorX, 105, 10, 10);
+    fill(140, 140, 140);
+  ellipse(meteorX, 120, 70, 50);
 }
 
 // Fire/Smoke
