@@ -31,11 +31,11 @@ function ufo(x, y) {
   triangle(-18, 0, 0, -30, 18, 0);
   pop();
 }
-//comet
-function comet(x, y){
+//meteor
+function meteor(x, y){
     fill(100);
-  ellipse(cometX, 100, 50, 20);
-  ellipse(cometX, 100, 50, 20);
+  ellipse(meteorX, 100, 40, 20);
+  ellipse(meteorX, 120, 60, 50);
 }
 
 // Fire/Smoke
@@ -44,9 +44,9 @@ function drawSmoke(x, y) {
   fill(230, 167, 20);
   ellipse(x, y, 30, 50);
 }
-let cometX = 0;
-let cometY = 200;
-let cometspeed = 2;
+let  meteorX = 0;
+let  meteorY = 200;
+let  meteorSpeed = 2;
 let ufoY = 100;
 let ufoX = 200;
 let velocity = 0.04;
@@ -123,11 +123,11 @@ function gameScreen() {
     } else {
       smokeY = 40;
     }
-    //comet
-    comet(cometX, cometY);
-    cometX -= cometspeed;
-    if (cometX < 0) { // Om kometen åker utanför högerkanten av canvas
-      cometX = width; // Återställ kometens position till början av canvas
+    //meteor
+    meteor(meteorX, meteorY);
+    meteorX -=  meteorSpeed;
+    if ( meteorX < 0) { // Om kometen åker utanför högerkanten av canvas
+        meteorX = width; // Återställ kometens position till början av canvas
     }
     //Up
     if (keyIsPressed) {
