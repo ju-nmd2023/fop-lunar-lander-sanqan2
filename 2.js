@@ -6,13 +6,20 @@ let ufoY = 100;
 let ufoX = 200;
 let velocity = 0.04;
 const acceleration = 0.04;
+let forceUp = 0;
+let mass = 1;
+let gravity = 1.5;
+thrust = 0;
+let downForce = 0;
+velocityX = 0;
+velocityY = 0;
 let angle = 0;
 let sideway = 3;
 let gameIsRunning = true;
 
 function setup() {
   createCanvas(590, 500);
-  textSize(22); // Set text size
+  textSize(22); 
  
   // Fill with stars
   for (let i = 0; i < 860; i++) {
@@ -40,30 +47,20 @@ function ufo(x, y) {
   ellipse(-4, 45, 5);
   ellipse(4, 45, 5);
   triangle(-18, 0, 0, -30, 18, 0);
-    // Left wing triangle
-   
-    triangle(-18, 60, -30, 70, -6, 70);
-    
-    // Right wing triangle
-    triangle(18, 60, 30, 70, 6, 70);
-    
-    
   pop();
 }
+
 //meteor
 function meteor(x, y){
     fill(140, 140, 140);
   ellipse(meteorX, 120, 70, 50);
 }
-
-
 // Fire/Smoke
 let smokeY = 90;
 function drawSmoke(x, y) {
   fill(230, 167, 20);
   ellipse(x, y, 30, 50);
 }
-
 
 //start
 function startScreen() {
@@ -94,7 +91,6 @@ function gameScreen() {
   background(30, 11, 150);
   noStroke();
  
- 
   //stars
   for (let star of stars) {
     fill(255, 255, 255, Math.abs(Math.sin(star.alpha)) * 255);
@@ -103,6 +99,8 @@ function gameScreen() {
     star.alpha = star.alpha + 0.02;
   }
   
+  fill(120, 120, 120);
+  ellipse(110, 110, 60);
   fill(120, 120, 120);
   ellipse(400, 210, 60);
   
@@ -133,15 +131,14 @@ function gameScreen() {
     //meteor
     meteor(meteorX, meteorY);
     meteorX -=  meteorSpeed;
-    if ( meteorX < 0) {
-        meteorX = width; 
+    if ( meteorX < 0) { // Om kometen åker utanför högerkanten av canvas
+        meteorX = width; // Återställ kometens position till början av canvas
     }
     //Up
     if (keyIsPressed) {
       if (keyCode === DOWN_ARROW) {
         velocity = velocity - 0.01;
       }
-       //<-- The following 7 lines of cod was brought from chat gpt. https://chat.openai.com/ 13-02-2024-->
       if (angle !== 0 && keyIsPressed && keyCode === DOWN_ARROW) {
         // Calculate the changes in x and y based on the angle
         let direction = angle > 0 ? 1 : -1; 
@@ -157,30 +154,33 @@ function gameScreen() {
         }
       }
       
+      // In keyPressed() function
       if (keyIsPressed) {
         if (keyCode === DOWN_ARROW) {
           velocity = velocity - 0.3;
         }
-        //<-- The following 18 lines of cod was partly brought from chat gpt. https://chat.openai.com/ 13-02-2024-->
         if (keyCode === RIGHT_ARROW) {
-          angle += 0.04;
-          if (angle > PI / 4) {
-            angle = PI / 4;
-          }
+          angle = angle + (Math.PI / 180) * 4;
         }
         if (keyCode === LEFT_ARROW) {
-          angle -= 0.04;
-          if (angle < -PI / 4) {
-            angle = -PI / 4;
-          }
+          angle = angle - (Math.PI / 180) * 4;
         }
       }
     }
-    if (angle > PI / 4) {
-      ufoX = ufoX + sideway; 
-      ufoY = ufoY + sideway; 
-    }
 
+forceUp = thrust * mass;
+downForce = -gravity;
+
+velocityY = velocity + forceUp * Math.cos(angle) + 0.07 * downForce;
+velocityX = velocityX + forceUp * Math.sign(angle);
+
+ufoY -= velocityY;
+ufoX += velocityX;
+
+    if (angle > PI / 4) {
+      ufoX = ufoX + sideway; // Öka x-värdet med hastigheten
+      ufoY = ufoY + sideway; // Öka y-värdet med hastigheten
+    }
     textSize(20);
     text("Speed: " + velocity.toFixed(2), 100, 30);
     if (ufoY > 360 || ufoY < -190) {
@@ -202,43 +202,34 @@ function overScreen() {
   fill(255);
   textSize(32); 
   textAlign(CENTER, CENTER);
-  text("Result", width / 2, 170);
+  text("Result", width / 2, 200);
   if (velocity > 3) {
     text("Crash", width / 2, height / 2);
   } else {
-    text("You landed safe and sound", width / 2, height / 2);
+    text("Good job", width / 2, height / 2);
   }
   //Points
   if (ufoY > 360 && ufoX > 20 && ufoX < 80 && velocity < 3) {
-    text("100p for landing spot", width / 2, 380);
+    text("100p", width / 2, 90);
   } else if (ufoY > 360 && ufoX > 130 && ufoX < 210 && velocity < 3) {
-    text("80p for landing spot", width / 2, 280);
+    text("80p", width / 2, 90);
   } else if (ufoY > 360 && ufoX > 270 && ufoX < 325 && velocity < 3) {
-    text("120p for landing spot", width / 2, 380);
+    text("120p", width / 2, 90);
   } else if (ufoY > 360 && ufoX > 362 && ufoX < 475 && velocity < 3) {
-    text("60p for landing spot", width / 2, 380);
-} else if (ufoY < -40) {
-    text("0p for landing spot", width / 2, 380);
+    text("60p", width / 2, 90);
   } else {
-    text("40p for landing spot", width / 2, 380);
+    text("40p", width / 2, 90);
   }
 
 }
 
 let state = "start"; 
 
-function checkGameOver() {
-    if (!gameIsRunning) {
-      state = "result";
-    }
-  }
-
 function draw() {
   if (state === "start") {
     startScreen();
   } else if (gameIsRunning === true) {
     gameScreen();
-    checkGameOver();
   } else if (state === "result") {
     overScreen();
   }
@@ -253,7 +244,6 @@ function mouseClicked() {
     // Reset game variables if needed
     gameIsRunning = true;
     ufoY = 100;
-    angle = 0;
     velocity = 1;
   }
 }
